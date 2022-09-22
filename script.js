@@ -49,4 +49,7 @@ function registerSeller() {
 }
 function registerManager() {
   let newManager = new Manager();
+  newManager.Name = String(prompt("Nome do Gerente:"));
+  newManager.Wage = parseFloat(prompt("Salario do Gerente:"));
+  newManager.Department = String(prompt("Departamento do Gerente:"));
 }
