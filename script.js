@@ -4,39 +4,66 @@ let productList = [],
 class Employee {
   Name;
   Wage;
+
+  constructor(name, wage) {
+    this.Name = name;
+    this.Wage = wage;
+  }
 }
 class Manager extends Employee {
   Department;
 
-  View_Manager_Information() {
-    console.log(
-      `Informação Gerente \nNome:${this.Name} \nSalario:${this.Wage}R$ \nDepartamento:${this.Department}`
-    );
+  constructor(name, wage, department) {
+    super(name, wage);
+    this.Department = department;
+  }
+
+  View_Manager_Information(managerName) {
+    manager.forEach((check) => {
+      if (check.Name == managerName) {
+        alert(
+          `Gerente:${check.Name} \nSalario:${check.Wage}R$ \nDepartamento: ${check.Department}`
+        );
+      }
+    });
   }
 }
 class Seller extends Employee {
   Commission_Percentage;
 
+  constructor(name, wage, commission) {
+    super(name, wage);
+    this.Commission_Percentage = commission;
+  }
+
   Calculate_Salary() {}
-  View_Seller_Information() {
-    console.log(
-      `Informação Vendedor \nNome:${this.Name} \nSalario:${this.Wage}R$ \nComissão:${this.Commission_Percentage}%`
-    );
+  View_Seller_Information(sellerName) {
+    seller.forEach((check) => {
+      if (check.Name == sellerName) {
+        alert(
+          `Vendedor: ${check.Name} \nSalario: ${check.Wage}R$ \nPorcentagem: ${check.Commission_Percentage}`
+        );
+      }
+    });
   }
 }
 class Product {
   Name;
   Price;
+
+  constructor(name, price) {
+    this.Name = name;
+    this.Price = price;
+  }
 }
 class Sell {
   Seller;
   ProductList;
   FinalValue;
-
   Add_New_Product() {
-    let newProduct = new Product();
-    newProduct.Name = String(prompt("Nome do Produto:"));
-    newProduct.Price = Number(prompt("Valor do Produto:"));
+    let newProduct = new Product(Name, Price);
+    const Name = String(prompt("Nome do Produto:")),
+      Price = Number(prompt("Valor do Produto:"));
     productList.push(newProduct);
     productList.forEach((check) => {
       if (check.Name == "" || check.Price == "") {
@@ -61,19 +88,24 @@ class Sell {
 let loop = true;
 while (loop) {
   let choice = Number(
-    prompt("1-Cadastrar Vendedor \n2-Cadastrar Gerente \n3-Vendas \n4-Sair")
+    prompt(
+      "1-Cadastrar Vendedor \n2-Cadastrar Gerente \n3-Informações \n4-Vendas  \n5-Sair"
+    )
   );
   switch (choice) {
     case 1:
-      registerSeller();
+      create_Seller();
       break;
     case 2:
-      registerManager();
+      create_Manager();
       break;
     case 3:
-      sales();
+      information();
       break;
     case 4:
+      sales();
+      break;
+    case 5:
       loop = false;
       break;
     default:
@@ -82,11 +114,42 @@ while (loop) {
   }
 }
 
-function registerSeller() {
-  let newSeller = new Seller();
-  newSeller.Name = String(prompt("Nome do Vendedor:"));
-  newSeller.Wage = Number(prompt("Salario do Vendedor:"));
-  newSeller.Commission_Percentage = parseFloat(prompt("Comissão do Vendedor:"));
+function information() {
+  let loopInfo = true;
+  while (loopInfo) {
+    let choiceSeller = Number(
+      prompt("1-Informação Vendedor \n2-Informação Gerente \n3-Sair")
+    );
+    switch (choiceSeller) {
+      case 1:
+        if (seller.length > 0) {
+          const sellerName = prompt("Qual nome do Vendedor:");
+          seller[0].View_Seller_Information(sellerName);
+        } else {
+          alert("Cadastre um Vendedor Primeiro!!!");
+        }
+        break;
+      case 2:
+        if (manager.length > 0) {
+          const managerName = prompt("Qual nome do Gerente:");
+          manager[0].View_Manager_Information(managerName);
+        } else {
+          alert("Cadastre um Gerente Primeiro!!!");
+        }
+        break;
+      case 3:
+        loopInfo = false;
+        break;
+      default:
+        break;
+    }
+  }
+}
+function create_Seller() {
+  const Name = String(prompt("Nome do Vendedor:")),
+    Wage = Number(prompt("Salario do Vendedor:")),
+    Commission_Percentage = parseFloat(prompt("Comissão do Vendedor:"));
+  let newSeller = new Seller(Name, Wage, Commission_Percentage);
   seller.push(newSeller);
   seller.forEach((check) => {
     if (
@@ -96,24 +159,19 @@ function registerSeller() {
     ) {
       seller.pop(newSeller);
       alert("Não Foi Possível Cadastrar,Adicione valores Validos");
-    } else {
-      newSeller.View_Seller_Information();
     }
   });
 }
-function registerManager() {
-  let newManager = new Manager();
-  newManager.Name = String(prompt("Nome do Gerente:"));
-  newManager.Wage = Number(prompt("Salario do Gerente:"));
-  newManager.Department = String(prompt("Departamento do Gerente:"));
+function create_Manager() {
+  const Name = String(prompt("Nome do Gerente:")),
+    Wage = Number(prompt("Salario do Gerente:")),
+    Department = String(prompt("Departamento do Gerente:"));
+  let newManager = new Manager(Name, Wage, Department);
   manager.push(newManager);
-  newManager.View_Manager_Information();
   manager.forEach((check) => {
     if (check.Name == "" || check.Wage == "" || check.Department == "") {
       manager.pop(newManager);
       alert("Não Foi Possível Cadastrar,Adicione valores Validos");
-    } else {
-      newManager.View_Manager_Information();
     }
   });
 }
@@ -150,8 +208,6 @@ function sales() {
               break;
           }
         }
-      } else {
-        alert("Vendedor Invalido!!!");
       }
     });
   }
